@@ -1,4 +1,4 @@
-const TUNNEL = 'https://springer-florists-pensions-camps.trycloudflare.com ';
+const TUNNEL = 'https://grade-crimes-dog-lafayette.trycloudflare.com';
 
 const CONFIG = {
   API_BASE: (new URLSearchParams(location.search).get('api')
