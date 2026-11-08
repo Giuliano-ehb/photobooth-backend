@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brick Booth – jouw foto's</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="hero">
+    <div class="studs" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="logo-brick">
+        <span class="logo-studs" aria-hidden="true"><i></i><i></i></span>
+        <h1>LEGO BOOTH</h1>
+      </div>
+      <p class="tagline">Jouw foto's, gebouwd steen voor steen.</p>
+      <div class="status" id="status" role="status">
+        <span class="dot"></span><span id="statusText">Verbinden…</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="toolbar">
+      <div class="count"><strong id="count">0</strong> <span id="countLabel">fotostrips</span></div>
+      <div class="seg" role="group" aria-label="Weergave">
+        <button type="button" class="active" data-view="strips">Fotostrips</button>
+        <button type="button" data-view="photos">Losse foto's</button>
+      </div>
+      <div class="tools">
+        <button class="btn btn-blue" id="sortBtn" type="button">Nieuwste eerst</button>
+        <button class="btn btn-yellow" id="refreshBtn" type="button">Vernieuwen</button>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery" aria-live="polite"></section>
+
+    <div id="empty" class="empty" hidden>
+      <div class="empty-brick"></div>
+      <h2>Nog geen foto's</h2>
+      <p>Druk op <kbd>w</kbd> in de photobooth en je foto's verschijnen hier vanzelf.</p>
+    </div>
+  </main>
+
+ 
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close btn btn-red" id="lbClose" type="button" aria-label="Sluiten">✕</button>
+    <button class="lb-nav lb-prev btn btn-blue" id="lbPrev" type="button" aria-label="Vorige">‹</button>
+    <figure>
+      <div class="lb-body" id="lbBody"></div>
+      <figcaption>
+        <span id="lbDate"></span>
+        <button id="lbDownload" class="btn btn-green" type="button">Download</button>
+      </figcaption>
+    </figure>
+    <button class="lb-nav lb-next btn btn-blue" id="lbNext" type="button" aria-label="Volgende">›</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

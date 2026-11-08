@@ -1,0 +1,182 @@
+:root{
+  --red:#e3000b;
+  --blue:#006db7;
+  --yellow:#ffd500;
+  --green:#00a651;
+  --black:#1b1b1b;
+  --paper:#f4f1ea;
+  --stud:22px;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Nunito',system-ui,sans-serif;
+  font-weight:600;
+  color:var(--black);
+  background-color:var(--blue);
+  /* legoplaat-patroon */
+  background-image:radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0 9px, rgba(0,0,0,.12) 10px 11px, transparent 12px);
+  background-size:44px 44px;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+h1,h2{font-family:'Lilita One',sans-serif;font-weight:400;letter-spacing:.02em}
+
+/* Studs-rij */
+.studs{
+  height:var(--stud);
+  background:
+    radial-gradient(circle at 50% 100%, var(--yellow) 0 9px, transparent 10px) 0 0/44px var(--stud) repeat-x;
+}
+.studs-bottom{transform:rotate(180deg)}
+
+/* Hero */
+.hero{background:var(--red);border-bottom:8px solid #a80008;text-align:center}
+.hero .studs{background:
+  radial-gradient(circle at 50% 100%, #ff2a35 0 9px, transparent 10px) 0 0/44px var(--stud) repeat-x}
+.hero-inner{padding:28px 20px 34px}
+.logo-brick{
+  display:inline-block;position:relative;
+  background:var(--yellow);color:var(--red);
+  padding:14px 34px 10px;border-radius:12px;
+  box-shadow:0 8px 0 #c7a600, 0 14px 24px rgba(0,0,0,.3);
+  transform:rotate(-2deg);
+}
+.logo-studs{position:absolute;left:50%;top:-14px;transform:translateX(-50%);display:flex;gap:30px}
+.logo-studs i{width:34px;height:16px;background:var(--yellow);border-radius:8px 8px 0 0;box-shadow:inset 0 -4px 0 #c7a600}
+.logo-brick h1{font-size:clamp(2rem,7vw,4rem);line-height:1;-webkit-text-stroke:2px var(--black);text-shadow:3px 3px 0 var(--black)}
+.tagline{color:#fff;margin-top:22px;font-weight:800;font-size:1.1rem}
+.status{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  background:rgba(0,0,0,.25);color:#fff;padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:800;
+}
+.dot{width:10px;height:10px;border-radius:50%;background:#aaa}
+.status.ok .dot{background:#4cff8a;box-shadow:0 0 8px #4cff8a}
+.status.demo .dot{background:var(--yellow)}
+.status.err .dot{background:#ff6b6b}
+
+/* Layout */
+main{flex:1;width:min(1200px,100% - 32px);margin:28px auto}
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;
+  background:var(--paper);border-radius:var(--radius);padding:12px 18px;
+  box-shadow:0 6px 0 rgba(0,0,0,.25);margin-bottom:28px;
+}
+.count{font-size:1.1rem}
+.count strong{font-family:'Lilita One';font-size:1.6rem;color:var(--red);font-weight:400}
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Knoppen = blokjes */
+.btn{
+  font:inherit;font-weight:800;color:#fff;border:0;cursor:pointer;text-decoration:none;
+  padding:10px 20px;border-radius:10px;display:inline-block;
+  box-shadow:0 5px 0 rgba(0,0,0,.35);transition:transform .08s, box-shadow .08s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 rgba(0,0,0,.35)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn-blue{background:var(--blue)}
+.btn-red{background:var(--red)}
+.btn-green{background:var(--green)}
+.btn-yellow{background:var(--yellow);color:var(--black)}
+
+/* Gallery */
+.gallery{
+  display:grid;gap:34px 26px;
+  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  padding-top:14px;
+}
+.brick{
+  --c:var(--red);
+  position:relative;background:var(--c);border-radius:var(--radius);
+  padding:14px;cursor:pointer;
+  box-shadow:0 9px 0 rgba(0,0,0,.3), 0 16px 20px rgba(0,0,0,.2);
+  transition:transform .15s;
+  animation:drop .5s cubic-bezier(.3,1.5,.5,1) both;
+}
+.brick::before{ /* studs bovenop */
+  content:"";position:absolute;left:14px;right:14px;top:-12px;height:14px;
+  background:radial-gradient(ellipse at 50% 100%, var(--c) 0 11px, transparent 12px) 0 0/ 52px 14px repeat-x;
+  filter:brightness(1.08);
+}
+.brick:hover{transform:translateY(-6px) rotate(-1deg)}
+.brick:nth-child(4n+2){--c:var(--blue)}
+.brick:nth-child(4n+3){--c:var(--yellow)}
+.brick:nth-child(4n+4){--c:var(--green)}
+.brick img{
+  width:100%;display:block;aspect-ratio:4/3;object-fit:cover;
+  border-radius:8px;background:#0003;border:3px solid rgba(0,0,0,.2);
+}
+.brick .meta{
+  display:flex;justify-content:space-between;align-items:center;margin-top:10px;
+  font-weight:800;font-size:.85rem;color:#fff;
+}
+.brick:nth-child(4n+3) .meta{color:var(--black)}
+.badge-new{
+  position:absolute;top:-10px;right:-8px;z-index:2;
+  background:var(--red);color:#fff;font-family:'Lilita One';padding:4px 10px;border-radius:8px;
+  border:3px solid #fff;transform:rotate(8deg);font-size:.85rem;
+}
+@keyframes drop{from{opacity:0;transform:translateY(-40px) scale(.9)}to{opacity:1;transform:none}}
+
+/* Skeleton */
+.skeleton{height:230px;border-radius:var(--radius);background:linear-gradient(90deg,#ffffff22,#ffffff44,#ffffff22);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* Leeg */
+.empty{text-align:center;background:var(--paper);padding:48px 20px;border-radius:var(--radius);box-shadow:0 6px 0 rgba(0,0,0,.25)}
+.empty[hidden]{display:none}
+.empty-brick{width:110px;height:56px;margin:18px auto 14px;background:var(--yellow);border-radius:8px;position:relative;box-shadow:0 6px 0 #c7a600}
+.empty-brick::before,.empty-brick::after{content:"";position:absolute;top:-12px;width:30px;height:14px;background:var(--yellow);border-radius:8px 8px 0 0}
+.empty-brick::before{left:16px}.empty-brick::after{right:16px}
+.empty h2{font-size:2rem;color:var(--red)}
+kbd{background:var(--black);color:#fff;padding:2px 9px;border-radius:6px}
+
+/* Weergave-schakelaar */
+.seg{display:inline-flex;background:#0002;border-radius:12px;padding:4px;gap:4px}
+.seg button{font:inherit;font-weight:800;border:0;background:transparent;padding:8px 16px;border-radius:9px;cursor:pointer;color:var(--black)}
+.seg button.active{background:var(--red);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.3)}
+
+/* Fotostrips: 3 foto's onder elkaar in één blok */
+.gallery.as-strips{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.brick .imgs{display:flex;flex-direction:column;gap:10px}
+.brick.strip .imgs img{aspect-ratio:4/3}
+.slot-wait{
+  aspect-ratio:4/3;border-radius:8px;border:3px dashed rgba(255,255,255,.7);
+  display:grid;place-items:center;color:#fff;font-family:'Lilita One';font-size:1.2rem;
+  animation:pulse 1.2s infinite;
+}
+.brick:nth-child(4n+3) .slot-wait{color:var(--black);border-color:rgba(0,0,0,.5)}
+@keyframes pulse{50%{opacity:.45}}
+
+/* Lightbox-inhoud */
+.lb-body{display:flex;justify-content:center}
+.lb-body img{max-height:70vh}
+.lb-body.lb-strip{gap:10px;overflow-x:auto}
+.lb-body.lb-strip img{max-height:56vh;min-width:0;flex:1 1 0;width:0;object-fit:cover}
+@media(max-width:620px){
+  .lb-body.lb-strip{flex-direction:column;max-height:55vh;overflow-y:auto}
+  .lb-body.lb-strip img{width:100%;flex:none;max-height:none}
+}
+
+
+
+/* Lightbox */
+.lightbox{
+  position:fixed;inset:0;z-index:50;background:rgba(10,10,30,.88);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;gap:16px;padding:20px;
+}
+.lightbox[hidden]{display:none}
+.lightbox figure{max-width:min(900px,80vw);background:var(--yellow);padding:16px;border-radius:var(--radius);box-shadow:0 10px 0 #c7a600}
+.lightbox img{max-width:100%;max-height:70vh;display:block;border-radius:8px;border:3px solid rgba(0,0,0,.25);margin:auto}
+.lightbox figcaption{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;font-weight:800}
+.lb-close{position:absolute;top:18px;right:18px}
+.lb-nav{font-size:1.8rem;line-height:1;padding:12px 18px}
+
+@media(max-width:620px){
+  .lb-nav{position:absolute;bottom:20px}
+  .lb-prev{left:20px}.lb-next{right:20px}
+  .lightbox figure{max-width:100%}
+  .lightbox{padding-bottom:90px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
