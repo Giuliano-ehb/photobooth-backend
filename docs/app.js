@@ -1,8 +1,13 @@
+const TUNNEL = 'https://romantic-antarctica-alone-aruba.trycloudflare.com';
+
 const CONFIG = {
-   API_BASE: (new URLSearchParams(location.search).get('api') || (location.port === '3000' ? location.origin : `http://${location.hostname || 'localhost'}:3000`)).replace(/\/+$/, ''),
+  API_BASE: (new URLSearchParams(location.search).get('api')
+    || (location.hostname.endsWith('github.io') ? TUNNEL
+    : location.port === '3000' ? location.origin
+    : `http://${location.hostname || 'localhost'}:3000`)).replace(/\/+$/, ''),
   PHOTOS_ENDPOINT: '/api/photos',
-  POLL_MS: 4000,                      
-  DEMO_FALLBACK: false,                
+  POLL_MS: 4000,
+  DEMO_FALLBACK: false,
   STRIP_SIZE: 3,
 };
 
