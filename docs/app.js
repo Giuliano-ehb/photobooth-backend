@@ -1,12 +1,3 @@
-const API = 'mongodb+srv://giulianoschaerlaecken_db_user:Spongebob12345@legophotobooth.leiv2ew.mongodb.net';
-
-fetch(`${API}/api/photos`)
-fetch(`${API}/api/sessions/${sessie}`)
-fetch(`${API}/api/photos`, { method: 'POST', body: formData })
-
-
-
-
 const CONFIG = {
    API_BASE: (new URLSearchParams(location.search).get('api') || (location.port === '3000' ? location.origin : `http://${location.hostname || 'localhost'}:3000`)).replace(/\/+$/, ''),
   PHOTOS_ENDPOINT: '/api/photos',
