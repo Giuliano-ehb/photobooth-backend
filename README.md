@@ -15,6 +15,11 @@ Ontvangt foto's van TouchDesigner, bewaart ze in `uploads/` en zet de gegevens i
    ```
    Je ziet `Verbonden met MongoDB` en `Backend draait op http://localhost:3000`.
 
+   eens dat node server.js gestart is open je een nieuwe terminal en run je :
+   npx cloudflared tunnel --url http://localhost:3000
+   je krijgt een link deze pas je telken opnieuw aan en zet je in config.js , api.js en app.js
+
+
 ## Endpoints
 | Methode | URL | Wat |
 |---|---|---|
