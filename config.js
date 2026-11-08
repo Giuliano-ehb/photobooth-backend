@@ -1,2 +1,2 @@
 /* export const DATABASE_URI ="mongodb+srv://giulianoschaerlaecken_db_user:Spongebob12345@legophotobooth.leiv2ew.mongodb.net/" */
-   export const API_BASE = 'https://romantic-antarctica-alone-aruba.trycloudflare.com';
+   export const API_BASE = 'https://consider-vcr-nutten-follows.trycloudflare.com';
