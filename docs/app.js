@@ -1,4 +1,4 @@
-const TUNNEL = 'https://romantic-antarctica-alone-aruba.trycloudflare.com';
+const TUNNEL = 'https://edgar-nhs-offline-opera.trycloudflare.com';
 
 const CONFIG = {
   API_BASE: (new URLSearchParams(location.search).get('api')
