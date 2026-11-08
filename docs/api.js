@@ -1,1 +1,1 @@
-export const API_BASE = 'https://collectables-sam-charleston-hop.trycloudflare.com   ';
+export const API_BASE = 'https://collectables-sam-charleston-hop.trycloudflare.com';
