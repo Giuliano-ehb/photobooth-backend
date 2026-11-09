@@ -8,9 +8,12 @@ var cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
-const { MongoClient, ObjectId, Binary } = require("mongodb");
+const { MongoClient, ObjectId, Binary } = require("mongodb")
 
 const dbName = "photosphotobooth"
+// Alles (foto-info + afbeelding) staat in deze ene collectie.
+// Wil je een andere collectie gebruiken? Verander alleen dit woord.
+const collectieNaam = "images"
 
 
 const path = require('path')
@@ -31,7 +34,6 @@ app.use('/uploads', express.static(uploadDir))
 app.use(express.static(path.join(__dirname, 'docs')))
 
 
-let photos = null
 let images = null
 
 // Pas uploaden als de databaseverbinding klaar is (of na 20s toch lokaal bewaren).
@@ -47,19 +49,24 @@ const bestaat = (p) =>
   !p.url || !p.url.startsWith('/uploads/') || fs.existsSync(path.join(uploadDir, path.basename(p.url)))
 
 async function insertPhoto(doc, buffer) {
-  if (!photos && process.env.DATABASE_URI) {
+  if (!images && process.env.DATABASE_URI) {
     await Promise.race([dbVerbonden, new Promise((r) => setTimeout(r, 20000))])
   }
-  if (photos && images) {
+  if (images) {
     try {
-      const img = await images.insertOne({
-        data: new Binary(buffer),
+      // Eén document per foto: info + afbeelding samen
+      const _id = new ObjectId()
+      const dbDoc = {
+        _id,
+        ...doc,
+        bestand: String(_id),
+        url: `/api/images/${_id}`,
         contentType: 'image/png',
-        createdAt: new Date(),
-      })
-      const dbDoc = { ...doc, bestand: String(img.insertedId), url: `/api/images/${img.insertedId}` }
-      const r = await photos.insertOne(dbDoc)
-      return { _id: r.insertedId, ...dbDoc }
+        data: new Binary(buffer),
+      }
+      await images.insertOne(dbDoc)
+      const { data, ...zonderData } = dbDoc
+      return zonderData
     } catch (err) {
       console.warn('Mongo mislukt, lokaal bewaard:', err.message)
     }
@@ -80,8 +87,11 @@ async function insertPhoto(doc, buffer) {
 
 async function findPhotos(filter = {}) {
   let uitDb = []
-  if (photos) {
-    try { uitDb = await photos.find(filter).toArray() } catch (err) { console.warn('Mongo lezen mislukt:', err.message) }
+  if (images) {
+    try {
+      // Alleen documenten met een url (dus foto-info), en zonder de zware afbeeldingsdata
+      uitDb = await images.find({ url: { $exists: true }, ...filter }, { projection: { data: 0 } }).toArray()
+    } catch (err) { console.warn('Mongo lezen mislukt:', err.message) }
   }
   const lokaal = readLocal().filter((p) => !filter.sessie || p.sessie === filter.sessie)
   return [...uitDb, ...lokaal].filter(bestaat)
@@ -89,14 +99,14 @@ async function findPhotos(filter = {}) {
 
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, database: !!photos })
+  res.json({ ok: true, database: !!images })
 })
 
 app.get('/api/images/:id', async (req, res) => {
   try {
     if (!images || !ObjectId.isValid(req.params.id)) return res.status(404).end()
     const doc = await images.findOne({ _id: new ObjectId(req.params.id) })
-    if (!doc) return res.status(404).end()
+    if (!doc || !doc.data) return res.status(404).end()
     const buf = Buffer.from(doc.data.read(0, doc.data.length()))
     res.set('Content-Type', doc.contentType || 'image/png')
     res.set('Cache-Control', 'public, max-age=31536000, immutable')
@@ -125,7 +135,7 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
   }
 })
 
-app.get('/api/images', async (req, res) => {
+app.get('/api/photos', async (req, res) => {
   try {
     const lijst = (await findPhotos())
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -159,15 +169,13 @@ async function connectLoop() {
     dbKlaar()
     return
   }
-  while (!photos) {
+  while (!images) {
     const client = new MongoClient(process.env.DATABASE_URI, { serverSelectionTimeoutMS: 5000 })
     try {
       await client.connect()
-      const db = client.db(dbName)
-      images = db.collection('images')
-      photos = db.collection('images')
+      images = client.db(dbName).collection(collectieNaam)
       dbKlaar()
-      console.log('geconnect met database')
+      console.log(`geconnect met database (collectie: ${collectieNaam})`)
     } catch (err) {
       console.warn('Database niet bereikbaar:', err.message)
       await client.close().catch(() => {})
