@@ -33,6 +33,11 @@ app.use(express.static(path.join(__dirname, 'docs')))
 
 let photos = null
 let images = null
+
+// Pas uploaden als de databaseverbinding klaar is (of na 20s toch lokaal bewaren).
+// Zo gaat een foto die tijdens een koude start op Render binnenkomt niet verloren.
+let dbKlaar
+const dbVerbonden = new Promise((resolve) => { dbKlaar = resolve })
 const localFile = path.join(__dirname, 'photos-local.json')
 const readLocal = () => { try { return JSON.parse(fs.readFileSync(localFile, 'utf8')) } catch { return [] } }
 const writeLocal = (list) => fs.writeFileSync(localFile, JSON.stringify(list, null, 2))
@@ -42,6 +47,9 @@ const bestaat = (p) =>
   !p.url || !p.url.startsWith('/uploads/') || fs.existsSync(path.join(uploadDir, path.basename(p.url)))
 
 async function insertPhoto(doc, buffer) {
+  if (!photos && process.env.DATABASE_URI) {
+    await Promise.race([dbVerbonden, new Promise((r) => setTimeout(r, 20000))])
+  }
   if (photos && images) {
     try {
       const img = await images.insertOne({
@@ -148,6 +156,7 @@ app.listen(port, '0.0.0.0', () => {
 async function connectLoop() {
   if (!process.env.DATABASE_URI) {
     console.error("DATABASE_URI ontbreekt, foto's worden alleen lokaal bewaard.")
+    dbKlaar()
     return
   }
   while (!photos) {
@@ -157,6 +166,7 @@ async function connectLoop() {
       const db = client.db(dbName)
       images = db.collection('images')
       photos = db.collection('photos')
+      dbKlaar()
       console.log('geconnect met database')
     } catch (err) {
       console.warn('Database niet bereikbaar:', err.message)

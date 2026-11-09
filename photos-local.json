@@ -46,5 +46,125 @@
     "createdAt": "2026-11-09T10:53:06.598Z",
     "bestand": "1794221586598-4wxhlu.png",
     "url": "/uploads/1794221586598-4wxhlu.png"
+  },
+  {
+    "_id": "local-1794221959830-532327",
+    "sessie": "20261109_115914",
+    "nummer": 1,
+    "createdAt": "2026-11-09T10:59:19.829Z",
+    "bestand": "1794221959829-97h96c.png",
+    "url": "/uploads/1794221959829-97h96c.png"
+  },
+  {
+    "_id": "local-1794221963967-614623",
+    "sessie": "20261109_115914",
+    "nummer": 2,
+    "createdAt": "2026-11-09T10:59:23.965Z",
+    "bestand": "1794221963965-7ma4cg.png",
+    "url": "/uploads/1794221963965-7ma4cg.png"
+  },
+  {
+    "_id": "local-1794221968016-972400",
+    "sessie": "20261109_115914",
+    "nummer": 3,
+    "createdAt": "2026-11-09T10:59:28.015Z",
+    "bestand": "1794221968015-6w9ilz.png",
+    "url": "/uploads/1794221968015-6w9ilz.png"
+  },
+  {
+    "_id": "local-1794222616331-600669",
+    "sessie": "20261109_121005",
+    "nummer": 1,
+    "createdAt": "2026-11-09T11:10:11.316Z",
+    "bestand": "1794222616330-bd78mf.png",
+    "url": "/uploads/1794222616330-bd78mf.png"
+  },
+  {
+    "_id": "local-1794222620339-304304",
+    "sessie": "20261109_121005",
+    "nummer": 2,
+    "createdAt": "2026-11-09T11:10:15.334Z",
+    "bestand": "1794222620338-egtqhq.png",
+    "url": "/uploads/1794222620338-egtqhq.png"
+  },
+  {
+    "_id": "local-1794222624440-806094",
+    "sessie": "20261109_121005",
+    "nummer": 3,
+    "createdAt": "2026-11-09T11:10:19.423Z",
+    "bestand": "1794222624439-4ln3d.png",
+    "url": "/uploads/1794222624439-4ln3d.png"
+  },
+  {
+    "_id": "local-1794222776785-997619",
+    "sessie": "20261109_121244",
+    "nummer": 1,
+    "createdAt": "2026-11-09T11:12:51.735Z",
+    "bestand": "1794222776763-eueo3j.png",
+    "url": "/uploads/1794222776763-eueo3j.png"
+  },
+  {
+    "_id": "local-1794222782186-102791",
+    "sessie": "20261109_121244",
+    "nummer": 2,
+    "createdAt": "2026-11-09T11:12:57.163Z",
+    "bestand": "1794222782179-3hv74b.png",
+    "url": "/uploads/1794222782179-3hv74b.png"
+  },
+  {
+    "_id": "local-1794222788052-115388",
+    "sessie": "20261109_121244",
+    "nummer": 3,
+    "createdAt": "2026-11-09T11:13:03.021Z",
+    "bestand": "1794222788032-dl3ote.png",
+    "url": "/uploads/1794222788032-dl3ote.png"
+  },
+  {
+    "_id": "local-1794223428269-599095",
+    "sessie": "20261109_122337",
+    "nummer": 1,
+    "createdAt": "2026-11-09T11:23:43.244Z",
+    "bestand": "1794223428259-7mqqzr.png",
+    "url": "/uploads/1794223428259-7mqqzr.png"
+  },
+  {
+    "_id": "local-1794223432341-983265",
+    "sessie": "20261109_122337",
+    "nummer": 2,
+    "createdAt": "2026-11-09T11:23:47.328Z",
+    "bestand": "1794223432340-4lgqhj.png",
+    "url": "/uploads/1794223432340-4lgqhj.png"
+  },
+  {
+    "_id": "local-1794223436399-883253",
+    "sessie": "20261109_122337",
+    "nummer": 3,
+    "createdAt": "2026-11-09T11:23:51.381Z",
+    "bestand": "1794223436397-ghtq6i.png",
+    "url": "/uploads/1794223436397-ghtq6i.png"
+  },
+  {
+    "_id": "local-1794223616799-220054",
+    "sessie": "20261109_122646",
+    "nummer": 1,
+    "createdAt": "2026-11-09T11:26:51.796Z",
+    "bestand": "1794223616798-18wti6.png",
+    "url": "/uploads/1794223616798-18wti6.png"
+  },
+  {
+    "_id": "local-1794223620843-858148",
+    "sessie": "20261109_122646",
+    "nummer": 2,
+    "createdAt": "2026-11-09T11:26:55.831Z",
+    "bestand": "1794223620842-2mob75.png",
+    "url": "/uploads/1794223620842-2mob75.png"
+  },
+  {
+    "_id": "local-1794223624877-436876",
+    "sessie": "20261109_122646",
+    "nummer": 3,
+    "createdAt": "2026-11-09T11:26:59.864Z",
+    "bestand": "1794223624875-f7vj5a.png",
+    "url": "/uploads/1794223624875-f7vj5a.png"
   }
 ]
