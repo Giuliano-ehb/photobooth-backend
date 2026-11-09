@@ -8,7 +8,7 @@ var cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient, ObjectId, Binary } = require("mongodb");
 
 const dbName = "photosphotobooth"
 
@@ -20,35 +20,50 @@ const multer = require('multer')
 const uploadDir = path.join(__dirname, 'uploads')
 fs.mkdirSync(uploadDir, { recursive: true })
 
+// Upload blijft in het geheugen, daarna gaat de afbeelding naar MongoDB
+// (of naar schijf als Mongo niet bereikbaar is)
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${Math.round(Math.random() * 1e9).toString(36)}.png`)
-    },
-  }),
-  limits: { fileSize: 20 * 1024 * 1024 },
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
 })
 
 app.use('/uploads', express.static(uploadDir))
 app.use(express.static(path.join(__dirname, 'docs')))
 
 
-let photos = null 
+let photos = null
+let images = null
 const localFile = path.join(__dirname, 'photos-local.json')
 const readLocal = () => { try { return JSON.parse(fs.readFileSync(localFile, 'utf8')) } catch { return [] } }
 const writeLocal = (list) => fs.writeFileSync(localFile, JSON.stringify(list, null, 2))
 
-async function insertPhoto(doc) {
-  if (photos) {
+// Records waarvan het bestand op schijf niet meer bestaat (bv. na een herstart op Render) worden verborgen
+const bestaat = (p) =>
+  !p.url || !p.url.startsWith('/uploads/') || fs.existsSync(path.join(uploadDir, path.basename(p.url)))
+
+async function insertPhoto(doc, buffer) {
+  if (photos && images) {
     try {
-      const r = await photos.insertOne(doc)
-      return { _id: r.insertedId, ...doc }
+      const img = await images.insertOne({
+        data: new Binary(buffer),
+        contentType: 'image/png',
+        createdAt: new Date(),
+      })
+      const dbDoc = { ...doc, bestand: String(img.insertedId), url: `/api/images/${img.insertedId}` }
+      const r = await photos.insertOne(dbDoc)
+      return { _id: r.insertedId, ...dbDoc }
     } catch (err) {
       console.warn('Mongo mislukt, lokaal bewaard:', err.message)
     }
   }
-  const lokaal = { _id: 'local-' + Date.now() + '-' + Math.round(Math.random() * 1e6), ...doc }
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9).toString(36)}.png`
+  fs.writeFileSync(path.join(uploadDir, filename), buffer)
+  const lokaal = {
+    _id: 'local-' + Date.now() + '-' + Math.round(Math.random() * 1e6),
+    ...doc,
+    bestand: filename,
+    url: `/uploads/${filename}`,
+  }
   const list = readLocal()
   list.push(lokaal)
   writeLocal(list)
@@ -61,12 +76,27 @@ async function findPhotos(filter = {}) {
     try { uitDb = await photos.find(filter).toArray() } catch (err) { console.warn('Mongo lezen mislukt:', err.message) }
   }
   const lokaal = readLocal().filter((p) => !filter.sessie || p.sessie === filter.sessie)
-  return [...uitDb, ...lokaal]
+  return [...uitDb, ...lokaal].filter(bestaat)
 }
 
 
 app.get('/api/health', (req, res) => {
   res.json({ ok: true, database: !!photos })
+})
+
+app.get('/api/images/:id', async (req, res) => {
+  try {
+    if (!images || !ObjectId.isValid(req.params.id)) return res.status(404).end()
+    const doc = await images.findOne({ _id: new ObjectId(req.params.id) })
+    if (!doc) return res.status(404).end()
+    const buf = Buffer.from(doc.data.read(0, doc.data.length()))
+    res.set('Content-Type', doc.contentType || 'image/png')
+    res.set('Cache-Control', 'public, max-age=31536000, immutable')
+    res.send(buf)
+  } catch (err) {
+    console.error(err)
+    res.status(500).end()
+  }
 })
 
 app.post('/api/photos', upload.single('photo'), async (req, res) => {
@@ -76,13 +106,11 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
     const doc = {
       sessie: req.body.sessie || null,
       nummer: Number(req.body.nummer) || 1,
-      bestand: req.file.filename,
-      url: `/uploads/${req.file.filename}`,
       createdAt: new Date(),
     }
-    const saved = await insertPhoto(doc)
-    console.log(`Foto ontvangen: sessie ${doc.sessie}, nummer ${doc.nummer} (${photos ? 'database' : 'lokaal bewaard'})`)
-    res.status(201).json({ id: saved._id, ...doc })
+    const saved = await insertPhoto(doc, req.file.buffer)
+    console.log(`Foto ontvangen: sessie ${doc.sessie}, nummer ${doc.nummer} (${saved.url.startsWith('/api/images/') ? 'database' : 'lokaal bewaard'})`)
+    res.status(201).json({ id: saved._id, ...doc, bestand: saved.bestand, url: saved.url })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Opslaan mislukt' })
@@ -126,7 +154,9 @@ async function connectLoop() {
     const client = new MongoClient(process.env.DATABASE_URI, { serverSelectionTimeoutMS: 5000 })
     try {
       await client.connect()
-      photos = client.db(dbName).collection('photos')
+      const db = client.db(dbName)
+      images = db.collection('images')
+      photos = db.collection('photos')
       console.log('geconnect met database')
     } catch (err) {
       console.warn('Database niet bereikbaar:', err.message)
