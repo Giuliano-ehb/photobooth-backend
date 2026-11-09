@@ -1,8 +1,10 @@
-const TUNNEL = 'https://nottingham-completed-limiting-campbell.trycloudflare.com';
+// Zet hier je Render-URL (zonder / op het einde)
+const BACKEND = 'https://jouw-app.onrender.com';
 
 const CONFIG = {
   API_BASE: (new URLSearchParams(location.search).get('api')
-    || (location.hostname.endsWith('github.io') ? TUNNEL
+    || (location.hostname.endsWith('github.io') ? BACKEND
+    : location.hostname.endsWith('onrender.com') ? location.origin
     : location.port === '3000' ? location.origin
     : `http://${location.hostname || 'localhost'}:3000`)).replace(/\/+$/, ''),
   PHOTOS_ENDPOINT: '/api/photos',
@@ -13,7 +15,7 @@ const CONFIG = {
 
 
 let photos = [];
-let view = 'strips';        
+let view = 'strips';
 let newestFirst = true;
 let seenIds = new Set();
 let firstLoad = true;
