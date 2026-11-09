@@ -125,7 +125,7 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
   }
 })
 
-app.get('/api/photos', async (req, res) => {
+app.get('/api/images', async (req, res) => {
   try {
     const lijst = (await findPhotos())
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
