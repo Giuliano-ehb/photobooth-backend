@@ -31,7 +31,7 @@ const upload = multer({
 })
 
 app.use('/uploads', express.static(uploadDir))
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'docs')))
 
 
 let photos = null 

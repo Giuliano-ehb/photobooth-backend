@@ -1,5 +1,5 @@
 // Zet hier je Render-URL (zonder / op het einde)
-const BACKEND = 'https://jouw-app.onrender.com';
+const BACKEND = 'https://photobooth-backend-jfpr.onrender.com';
 
 const CONFIG = {
   API_BASE: (new URLSearchParams(location.search).get('api')
