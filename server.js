@@ -10,9 +10,6 @@ app.use(express.json())
 
 const { MongoClient, ObjectId } = require("mongodb");
 
-
-
-const client = new MongoClient(process.env.DATABASE_URI, { serverSelectionTimeoutMS: 5000 });
 const dbName = "photosphotobooth"
 
 
@@ -121,13 +118,19 @@ app.listen(port, '0.0.0.0', () => {
 })
 
 async function connectLoop() {
+  if (!process.env.DATABASE_URI) {
+    console.error("DATABASE_URI ontbreekt, foto's worden alleen lokaal bewaard.")
+    return
+  }
   while (!photos) {
+    const client = new MongoClient(process.env.DATABASE_URI, { serverSelectionTimeoutMS: 5000 })
     try {
       await client.connect()
       photos = client.db(dbName).collection('photos')
       console.log('geconnect met database')
     } catch (err) {
-      console.warn('Database niet bereikbaar, foto\'s worden lokaal bewaard. Nieuwe poging over 15 s...')
+      console.warn('Database niet bereikbaar:', err.message)
+      await client.close().catch(() => {})
       await new Promise((r) => setTimeout(r, 15000))
     }
   }
