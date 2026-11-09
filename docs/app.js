@@ -1,4 +1,4 @@
-const TUNNEL = 'https://cannon-marine-vcr-socks.trycloudflare.com';
+const TUNNEL = 'https://politics-dentists-screw-jungle.trycloudflare.com';
 
 const CONFIG = {
   API_BASE: (new URLSearchParams(location.search).get('api')
