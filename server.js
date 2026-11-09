@@ -165,7 +165,6 @@ async function connectLoop() {
       await client.connect()
       const db = client.db(dbName)
       images = db.collection('images')
-      photos = db.collection('photos')
       dbKlaar()
       console.log('geconnect met database')
     } catch (err) {
