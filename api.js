@@ -1,0 +1,1 @@
+export const API_BASE = 'https://photobooth-backend-jfpr.onrender.com';

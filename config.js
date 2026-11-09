@@ -1,1 +1,1 @@
-export const API_BASE = 'https://nottingham-completed-limiting-campbell.trycloudflare.com';
+export const API_BASE = 'https://photobooth-backend-jfpr.onrender.com';
